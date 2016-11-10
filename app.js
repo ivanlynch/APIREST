@@ -28,8 +28,8 @@ mongoose.connect('mongodb://localhost/posts', function(err, res) {
     console.log('ERROR: Base de datos no disponible. ' + err);
   }else{
       console.log("SUCCESS: Conectado a Base de Datos.");
-      app.listen(3000, function() {
-        console.log("Servidor Node Corriendo en: http://localhost:3000");
+      app.listen(3001, function() {
+        console.log("Servidor Node Corriendo en: http://localhost:3001");
       });
   }
 });
