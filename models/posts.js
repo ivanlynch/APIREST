@@ -2,7 +2,7 @@
 var mongoose = require('mongoose'),  
     Schema   = mongoose.Schema;
 
-/* Declaramos el Schema */
+/* Definimos el Schema */
 var postsSchema = new Schema({  
   title:      { type: String },
   updated:    { type: Date, default: Date.now },
@@ -10,5 +10,5 @@ var postsSchema = new Schema({
   commentary: { type: String }
 });
 
-/* exportamos el Schema */
+/* Exportamos el Schema */
 module.exports = mongoose.model('Posts', postsSchema)

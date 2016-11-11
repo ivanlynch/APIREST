@@ -5,31 +5,43 @@ var express = require("express"),
     methodOverride = require("method-override");
     mongoose = require('mongoose');
 
+/* Hacemos la conexion a la Base de datos, en caso de que falle nos dará un ERROR*/
+mongoose.connect('mongodb://localhost/posts', function(err, res) {
+  if(err) throw err;
+  console.log('Connected to Database');
+});
 
 /* Declaramos nuestro bodyParser y methodOverride */
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());  
 app.use(methodOverride());
 
-/* Craemos una instancia del express router */
+var models = require('./models/posts')(app, mongoose);
+var PostCtrl = require('./controllers/posts');
+
+/* Rutas para cliente */
 var router = express.Router();
 
-/* Definimos nuestra primera ruta */
 router.get('/', function(req, res) {  
    res.send("Creando una API Rest!");
 });
 
-/* Decalramos que vamos a usar el router */
+/* Declaramos que vamos a usar el router */
 app.use(router);
 
-/* Hacemos la conexion a la Base de datos, en caso de que falle nos dará un ERROR y el servidor no iniciará*/
-mongoose.connect('mongodb://localhost/posts', function(err, res) {  
-  if(err) {
-    console.log('ERROR: Base de datos no disponible. ' + err);
-  }else{
-      console.log("SUCCESS: Conectado a Base de Datos.");
-      app.listen(3001, function() {
+/* API Routes */
+var posts = express.Router();
+
+posts.route('/posts')
+  .get(PostCtrl.findAllPosts)
+  .post(PostCtrl.addPosts);
+
+posts.route('/posts/:id')
+  .put(PostCtrl.updatePosts)
+  .delete(PostCtrl.deletePosts);
+
+app.use('/api', posts);
+
+app.listen(3001, function() {
         console.log("Servidor Node Corriendo en: http://localhost:3001");
-      });
-  }
 });
